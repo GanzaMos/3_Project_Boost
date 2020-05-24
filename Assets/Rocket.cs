@@ -33,11 +33,15 @@ public class Rocket : MonoBehaviour
             case "Friendly":
                 //do nothing
                 break;
-            case "Not friendly":
-                print("You are fucking die!");
-                break;
             case "Fuel":
                 print("You got some fuel!");
+                break;
+            case "Finish":
+                print("Level complete!");
+                break;
+            default:
+                print("You are fucking die!");
+                //Make Rocket explode
                 break;
         }
     }
