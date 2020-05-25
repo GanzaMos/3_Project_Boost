@@ -48,22 +48,32 @@ public class Rocket : MonoBehaviour
     private void Thrust()
     {
 
+        //rigidbody Thrust
+
         float RocketSpeed = rcsEnguineThrust * Time.deltaTime;
 
         if (Input.GetKey(KeyCode.Space)) //can thrust while rotating
         {
             rigidBody.AddRelativeForce(Vector3.up * RocketSpeed);
-
-            if (audioSource.isPlaying == false)
-            {
-                audioSource.Play();
-            }
         }
-        else if (Input.GetKeyUp(KeyCode.Space))
+
+        //audio Thrust
+
+        bool isThrusting = Input.GetKey(KeyCode.Space); //thrusting
+        bool stopThrusting = Input.GetKeyUp(KeyCode.Space);
+        bool isPlaying = audioSource.isPlaying;
+
+        if (isThrusting && !isPlaying)
         {
-            audioSource.Stop();
+            StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 1));
         }
-
+        else if (isThrusting && isPlaying)
+        { 
+        }
+        else if (stopThrusting)
+        {
+            StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 0));
+        }
     }
 
     private void Rotate()
@@ -85,4 +95,34 @@ public class Rocket : MonoBehaviour
 
         rigidBody.freezeRotation = true;
     }
+
+    public static class FadeAudioSource
+    {
+
+        public static IEnumerator StartFade(AudioSource audioSource, float duration, float targetVolume)
+        {
+            float currentTime = 0;
+            float start = audioSource.volume;
+
+            if (audioSource.volume == 0)
+            {
+                audioSource.Play();
+            }
+
+            while (currentTime < duration)
+            {
+                currentTime += Time.deltaTime;
+                audioSource.volume = Mathf.Lerp(start, targetVolume, currentTime / duration);
+                if (audioSource.volume == 0)
+                {
+                    audioSource.Stop();
+                }
+                yield return null;
+            }
+            yield break;
+
+
+        }
+    }
+
 }
