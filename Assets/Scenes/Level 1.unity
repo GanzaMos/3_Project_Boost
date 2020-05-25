@@ -559,7 +559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1967952938, guid: 00546278e30768e4db7243d27abcb4df, type: 3}
       propertyPath: rcsEnguineThrust
-      value: 1000
+      value: 2599
       objectReference: {fileID: 0}
     - target: {fileID: 1771453740132568292, guid: 00546278e30768e4db7243d27abcb4df,
         type: 3}
@@ -634,12 +634,12 @@ PrefabInstance:
     - target: {fileID: 2147650862136843919, guid: 00546278e30768e4db7243d27abcb4df,
         type: 3}
       propertyPath: m_Mass
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2147650862136843919, guid: 00546278e30768e4db7243d27abcb4df,
         type: 3}
       propertyPath: m_AngularDrag
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2147650862136843919, guid: 00546278e30768e4db7243d27abcb4df,
         type: 3}
@@ -654,7 +654,17 @@ PrefabInstance:
     - target: {fileID: 2147650862136843919, guid: 00546278e30768e4db7243d27abcb4df,
         type: 3}
       propertyPath: m_Drag
-      value: 0.25
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147650862136843919, guid: 00546278e30768e4db7243d27abcb4df,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427135299514629222, guid: 00546278e30768e4db7243d27abcb4df,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00546278e30768e4db7243d27abcb4df, type: 3}
