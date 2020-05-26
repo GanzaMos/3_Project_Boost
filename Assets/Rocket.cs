@@ -8,6 +8,10 @@ public class Rocket : MonoBehaviour
 {
     [SerializeField] float rcsRotateThrust = 100f;
     [SerializeField] float rcsEnguineThrust = 250f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip levelCompete;
+    [SerializeField] AudioClip destroy;
+
 
     Rigidbody rigidBody;
     AudioSource audioSource;
@@ -27,11 +31,10 @@ public class Rocket : MonoBehaviour
     {
         if (state == State.Alive)
         {
-            Thrust();
-            Rotate();
+            RespondToThrustInput();
+            RespondToRotateInput();
         }
     }
-
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -49,32 +52,34 @@ public class Rocket : MonoBehaviour
                 print("You got some fuel!");
                 break;
             case "Finish":
-                print("Level complete!");
-                Invoke("LoadNewLevel", 1.5f) ; //todo работает только для 2 уровней
-                state = State.Transcending;
+                StartSuccessSequence();
                 break;
             default:
-                print("You are fucking die!");
-                state = State.Dying;
-                StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 0));
-                Invoke("DeadLevel", 1.5f);
+                StartDeathSequence();
                 break;
         }
     }
 
-    private void DeadLevel()
+    private void StartDeathSequence()
     {
-        SceneManager.LoadScene(0);
-        state = State.Alive;
+        print("You are fucking die!");
+        state = State.Dying;
+        audioSource.Stop();
+        audioSource.PlayOneShot(destroy, 0.5f);
+        //StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 0, mainEngine)); заглушаем звук после смерти
+        Invoke("DeadLevel", 1.5f);
     }
 
-    private void LoadNewLevel()
+    private void StartSuccessSequence()
     {
-        SceneManager.LoadScene(1);
-        state = State.Alive;
+        print("Level complete!");
+        Invoke("LoadNewLevel", 1.5f); //todo работает только для 2 уровней
+        audioSource.Stop();
+        audioSource.PlayOneShot(levelCompete);
+        state = State.Transcending;
     }
 
-    private void Thrust()
+    private void RespondToThrustInput()
     {
 
         //rigidbody Thrust
@@ -86,26 +91,30 @@ public class Rocket : MonoBehaviour
             rigidBody.AddRelativeForce(Vector3.up * RocketSpeed);
         }
 
-        //audio Thrust
+        ThrustSound();
+    }
 
+    private void ThrustSound()
+    {
         bool isThrusting = Input.GetKey(KeyCode.Space); //thrusting
-        bool stopThrusting = Input.GetKeyUp(KeyCode.Space);
         bool isPlaying = audioSource.isPlaying;
 
         if (isThrusting && !isPlaying)
         {
-            StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 1));
+            audioSource.PlayOneShot(mainEngine);
+            //StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 1)); включаем звук двигателя
         }
         else if (isThrusting && isPlaying)
-        { 
-        }
-        else if (stopThrusting)
         {
-            StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 0));
+        }
+        else
+        {
+            audioSource.Stop();
+            //StartFade(mainEngine, 0.3f, 0); заглушаем звук двигателя
         }
     }
 
-    private void Rotate()
+    private void RespondToRotateInput()
     {
 
         rigidBody.freezeRotation = false;
@@ -123,35 +132,41 @@ public class Rocket : MonoBehaviour
         }
 
         rigidBody.freezeRotation = true;
+
     }
 
-    public static class FadeAudioSource
+    private void DeadLevel()
     {
-
-        public static IEnumerator StartFade(AudioSource audioSource, float duration, float targetVolume)
-        {
-            float currentTime = 0;
-            float start = audioSource.volume;
-
-            if (audioSource.volume == 0)
-            {
-                audioSource.Play();
-            }
-
-            while (currentTime < duration)
-            {
-                currentTime += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(start, targetVolume, currentTime / duration);
-                if (audioSource.volume == 0)
-                {
-                    audioSource.Stop();
-                }
-                yield return null;
-            }
-            yield break;
-
-
-        }
+        SceneManager.LoadScene(0);
+        state = State.Alive;
     }
 
+    private void LoadNewLevel()
+    {
+        SceneManager.LoadScene(1);
+        state = State.Alive;
+    }
+
+    /* метод для заглушения звука
+    private void StartFade(AudioSource audio, float duration, float targetVolume)
+    {
+        float currentTime = 0;
+        float start = audio.volume;
+
+        if (audio.volume == 0)
+        {
+            audio.Play();
+        }
+
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            audio.volume = Mathf.Lerp(start, targetVolume, currentTime / duration);
+            if (audio.volume == 0)
+            {
+                audio.Stop();
+            }
+        }
+    }  
+    */
 }
