@@ -8,9 +8,15 @@ public class Rocket : MonoBehaviour
 {
     [SerializeField] float rcsRotateThrust = 100f;
     [SerializeField] float rcsEnguineThrust = 250f;
-    [SerializeField] AudioClip mainEngine;
-    [SerializeField] AudioClip levelCompete;
-    [SerializeField] AudioClip destroy;
+
+
+    [SerializeField] AudioClip mainEngineAudio;
+    [SerializeField] AudioClip levelCompeteAudio;
+    [SerializeField] AudioClip destroyAudio;
+
+    [SerializeField] ParticleSystem mainEngineParticle;
+    [SerializeField] ParticleSystem levelCompeteParticle;
+    [SerializeField] ParticleSystem destroyParticle;
 
 
     Rigidbody rigidBody;
@@ -65,7 +71,8 @@ public class Rocket : MonoBehaviour
         print("You are fucking die!");
         state = State.Dying;
         audioSource.Stop();
-        audioSource.PlayOneShot(destroy, 0.5f);
+        audioSource.PlayOneShot(destroyAudio, 0.5f);
+        destroyParticle.Play();
         //StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 0, mainEngine)); заглушаем звук после смерти
         Invoke("DeadLevel", 1.5f);
     }
@@ -75,7 +82,8 @@ public class Rocket : MonoBehaviour
         print("Level complete!");
         Invoke("LoadNewLevel", 1.5f); //todo работает только для 2 уровней
         audioSource.Stop();
-        audioSource.PlayOneShot(levelCompete);
+        levelCompeteParticle.Play();
+        audioSource.PlayOneShot(levelCompeteAudio);
         state = State.Transcending;
     }
 
@@ -89,19 +97,21 @@ public class Rocket : MonoBehaviour
         if (Input.GetKey(KeyCode.Space)) //can thrust while rotating
         {
             rigidBody.AddRelativeForce(Vector3.up * RocketSpeed);
-        }
+            
+        }  
+        ThrustEffects();
 
-        ThrustSound();
     }
 
-    private void ThrustSound()
+    private void ThrustEffects()
     {
         bool isThrusting = Input.GetKey(KeyCode.Space); //thrusting
         bool isPlaying = audioSource.isPlaying;
 
         if (isThrusting && !isPlaying)
         {
-            audioSource.PlayOneShot(mainEngine);
+            audioSource.PlayOneShot(mainEngineAudio);
+            mainEngineParticle.Play();
             //StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 1)); включаем звук двигателя
         }
         else if (isThrusting && isPlaying)
@@ -110,6 +120,7 @@ public class Rocket : MonoBehaviour
         else
         {
             audioSource.Stop();
+            mainEngineParticle.Stop();
             //StartFade(mainEngine, 0.3f, 0); заглушаем звук двигателя
         }
     }
