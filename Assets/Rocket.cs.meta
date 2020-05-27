@@ -3,7 +3,16 @@ guid: 6f047b75c2f2b70489ac610785b9fee0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - mainEngineAudio: {fileID: 8300000, guid: ddb858f28493d0042b438a29069ab3cb, type: 3}
+  - levelCompeteAudio: {fileID: 8300000, guid: 3d29a213086075243bdcabea86333ebd, type: 3}
+  - destroyAudio: {fileID: 8300000, guid: 52bdfefd07cde3846a0734f72f0710c0, type: 3}
+  - mainEngineParticle: {fileID: 198100719057022332, guid: a3553fd250eb92d4091bebde350c6739,
+      type: 3}
+  - levelCompeteParticle: {fileID: 198631066050499358, guid: 62198a3a5dbb64a4f9e1618929224faa,
+      type: 3}
+  - destroyParticle: {fileID: 198204746014789312, guid: ab79a37535b979f48b6de56e3a0a5cb0,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

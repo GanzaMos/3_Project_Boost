@@ -8,7 +8,7 @@ public class Rocket : MonoBehaviour
 {
     [SerializeField] float rcsRotateThrust = 100f;
     [SerializeField] float rcsEnguineThrust = 250f;
-
+    [SerializeField] float levelLoadDelay = 2f;
 
     [SerializeField] AudioClip mainEngineAudio;
     [SerializeField] AudioClip levelCompeteAudio;
@@ -74,13 +74,13 @@ public class Rocket : MonoBehaviour
         audioSource.PlayOneShot(destroyAudio, 0.5f);
         destroyParticle.Play();
         //StartCoroutine(FadeAudioSource.StartFade(audioSource, 0.3f, 0, mainEngine)); заглушаем звук после смерти
-        Invoke("DeadLevel", 1.5f);
+        Invoke("DeadLevel", levelLoadDelay);
     }
 
     private void StartSuccessSequence()
     {
         print("Level complete!");
-        Invoke("LoadNewLevel", 1.5f); //todo работает только для 2 уровней
+        Invoke("LoadNewLevel", levelLoadDelay); //todo работает только для 2 уровней
         audioSource.Stop();
         levelCompeteParticle.Play();
         audioSource.PlayOneShot(levelCompeteAudio);
